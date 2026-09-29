@@ -1,0 +1,128 @@
+[
+    {
+        "id": "inject-demo",
+        "type": "inject",
+        "z": "flow-demo",
+        "name": "Inject Demo",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "demo",
+        "payload": "",
+        "payloadType": "date",
+        "x": 160,
+        "y": 160,
+        "wires": [
+            [
+                "function-demo"
+            ]
+        ]
+    },
+    {
+        "id": "function-demo",
+        "type": "function",
+        "z": "flow-demo",
+        "name": "Create Demo Message",
+        "func": "const now = new Date();\nmsg.payload = {\n    ok: 1,\n    msg: \"Node-RED hoạt động\",\n    time: now.toISOString()\n};\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 160,
+        "wires": [
+            [
+                "debug-demo"
+            ]
+        ]
+    },
+    {
+        "id": "debug-demo",
+        "type": "debug",
+        "z": "flow-demo",
+        "name": "Debug Output",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 600,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "http-in-students",
+        "type": "http in",
+        "z": "flow-api",
+        "name": "GET /api/students",
+        "url": "/api/students",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 160,
+        "y": 160,
+        "wires": [
+            [
+                "function-students"
+            ]
+        ]
+    },
+    {
+        "id": "function-students",
+        "type": "function",
+        "z": "flow-api",
+        "name": "Create Students Response",
+        "func": "msg.payload = {\n    ok: 1,\n    msg: \"Thành công\",\n    students: [\n        {\n            id: 1,\n            name: \"Nguyễn Văn An\",\n            class: \"K59 KMT.K01\",\n            score: 8.5\n        },\n        {\n            id: 2,\n            name: \"Trần Thị Bình\",\n            class: \"K59 KMT.K01\",\n            score: 7.5\n        },\n        {\n            id: 3,\n            name: \"David\",\n            class: \"K59 KMT.K02\",\n            score: 9.0\n        }\n    ]\n};\nmsg.headers = {\n    \"Content-Type\": \"application/json; charset=utf-8\"\n};\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 160,
+        "wires": [
+            [
+                "http-response-students"
+            ]
+        ]
+    },
+    {
+        "id": "http-response-students",
+        "type": "http response",
+        "z": "flow-api",
+        "name": "HTTP Response",
+        "statusCode": "200",
+        "headers": {},
+        "x": 600,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "flow-demo",
+        "type": "tab",
+        "label": "Demo Flow",
+        "disabled": false,
+        "info": "Flow demo đơn giản: Inject → Function → Debug\nChứng minh Node-RED hoạt động bình thường."
+    },
+    {
+        "id": "flow-api",
+        "type": "tab",
+        "label": "API Students",
+        "disabled": false,
+        "info": "API GET /api/students - Trả về danh sách sinh viên mẫu"
+    }
+]

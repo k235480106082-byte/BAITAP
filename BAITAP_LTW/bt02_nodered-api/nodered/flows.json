@@ -1,0 +1,103 @@
+[
+    {
+        "id": "http-in-students",
+        "type": "http in",
+        "z": "flow-api",
+        "name": "GET /api/students",
+        "url": "/api/students",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 160,
+        "y": 120,
+        "wires": [
+            [
+                "function-students"
+            ]
+        ]
+    },
+    {
+        "id": "function-students",
+        "type": "function",
+        "z": "flow-api",
+        "name": "Create Students Response",
+        "func": "msg.payload = {\n    ok: 1,\n    msg: \"Thành công\",\n    students: [\n        {\n            id: 1,\n            name: \"Nguyễn Văn An\",\n            class: \"K59 KMT.K01\",\n            score: 8.5\n        },\n        {\n            id: 2,\n            name: \"Trần Thị Bình\",\n            class: \"K59 KMT.K01\",\n            score: 7.5\n        },\n        {\n            id: 3,\n            name: \"David\",\n            class: \"K59 KMT.K02\",\n            score: 9.0\n        }\n    ]\n};\nmsg.headers = {\n    \"Content-Type\": \"application/json; charset=utf-8\"\n};\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 120,
+        "wires": [
+            [
+                "http-response-students"
+            ]
+        ]
+    },
+    {
+        "id": "http-response-students",
+        "type": "http response",
+        "z": "flow-api",
+        "name": "HTTP Response Students",
+        "statusCode": "200",
+        "headers": {},
+        "x": 600,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "http-in-rank",
+        "type": "http in",
+        "z": "flow-api",
+        "name": "GET /api/rank",
+        "url": "/api/rank",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 160,
+        "y": 260,
+        "wires": [
+            [
+                "function-rank"
+            ]
+        ]
+    },
+    {
+        "id": "function-rank",
+        "type": "function",
+        "z": "flow-api",
+        "name": "Validate & Rank Score",
+        "func": "const scoreParam = msg.req.query.score;\n\n// Validation: thiếu score\nif (scoreParam === undefined || scoreParam === '') {\n    msg.statusCode = 400;\n    msg.payload = {\n        ok: 0,\n        msg: \"Thiếu tham số score\",\n        error: \"MISSING_SCORE\"\n    };\n    msg.headers = { \"Content-Type\": \"application/json; charset=utf-8\" };\n    return msg;\n}\n\n// Validation: không phải số\nconst score = parseFloat(scoreParam);\nif (isNaN(score)) {\n    msg.statusCode = 400;\n    msg.payload = {\n        ok: 0,\n        msg: \"Score phải là một số\",\n        error: \"INVALID_SCORE\"\n    };\n    msg.headers = { \"Content-Type\": \"application/json; charset=utf-8\" };\n    return msg;\n}\n\n// Validation: score < 0\nif (score < 0) {\n    msg.statusCode = 400;\n    msg.payload = {\n        ok: 0,\n        msg: \"Score không được nhỏ hơn 0\",\n        error: \"SCORE_TOO_LOW\"\n    };\n    msg.headers = { \"Content-Type\": \"application/json; charset=utf-8\" };\n    return msg;\n}\n\n// Validation: score > 10\nif (score > 10) {\n    msg.statusCode = 400;\n    msg.payload = {\n        ok: 0,\n        msg: \"Score không được lớn hơn 10\",\n        error: \"SCORE_TOO_HIGH\"\n    };\n    msg.headers = { \"Content-Type\": \"application/json; charset=utf-8\" };\n    return msg;\n}\n\n// Thuật toán xếp loại\nlet rank;\nif (score >= 8.5) {\n    rank = \"Giỏi\";\n} else if (score >= 7.0) {\n    rank = \"Khá\";\n} else if (score >= 5.0) {\n    rank = \"Trung bình\";\n} else {\n    rank = \"Yếu\";\n}\n\nmsg.payload = {\n    ok: 1,\n    msg: \"Thành công\",\n    score: score,\n    rank: rank\n};\nmsg.headers = {\n    \"Content-Type\": \"application/json; charset=utf-8\"\n};\nmsg.statusCode = 200;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 260,
+        "wires": [
+            [
+                "http-response-rank"
+            ]
+        ]
+    },
+    {
+        "id": "http-response-rank",
+        "type": "http response",
+        "z": "flow-api",
+        "name": "HTTP Response Rank",
+        "statusCode": "",
+        "headers": {},
+        "x": 600,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "flow-api",
+        "type": "tab",
+        "label": "API Students & Rank",
+        "disabled": false,
+        "info": "API GET /api/students - Trả về danh sách sinh viên\nAPI GET /api/rank?score=X - Xếp loại điểm theo: >=8.5 Giỏi, >=7.0 Khá, >=5.0 Trung bình, <5.0 Yếu\nValidation: missing score, not number, <0, >10"
+    }
+]

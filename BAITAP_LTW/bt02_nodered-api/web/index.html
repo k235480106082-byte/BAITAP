@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student API Demo - Bài Tập 2</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                <span>Student API Demo</span>
+            </div>
+            <p class="subtitle">Bài Tập 2 - Node-RED API + Nginx Reverse Proxy</p>
+        </div>
+    </header>
+
+    <main class="main">
+        <section class="section" id="students-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>API: Danh Sách Sinh Viên</h2>
+                    <span class="endpoint">GET /api/students</span>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <button class="btn btn-primary" id="btn-fetch-students">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 18a5 5 0 0 0-10 0M12 2v6"/>
+                            </svg>
+                            <span>Gọi API</span>
+                        </button>
+                        <span class="status-indicator" id="students-status"></span>
+                    </div>
+                    <div class="loading" id="students-loading">
+                        <div class="spinner"></div>
+                        <p>Đang tải dữ liệu...</p>
+                    </div>
+                    <div class="error" id="students-error"></div>
+                    <div class="data-display" id="students-data">
+                        <pre class="json-output" id="students-json"></pre>
+                    </div>
+                    <div class="table-wrapper" id="students-table-wrapper">
+                        <table class="data-table" id="students-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Tên</th>
+                                    <th>Lớp</th>
+                                    <th>Điểm</th>
+                                </tr>
+                            </thead>
+                            <tbody id="students-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="rank-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>API: Xếp Loại Điểm</h2>
+                    <span class="endpoint">GET /api/rank?score=8.5</span>
+                </div>
+                <div class="card">
+                    <div class="input-group">
+                        <label for="score-input">Nhập điểm (0-10):</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="score-input" min="0" max="10" step="0.1" placeholder="Ví dụ: 8.5" value="8.5">
+                            <button class="btn btn-primary" id="btn-fetch-rank">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                    <line x1="16" y1="13" x2="8" y2="13"/>
+                                    <line x1="16" y1="17" x2="8" y2="17"/>
+                                    <polyline points="10 9 9 9 8 9"/>
+                                </svg>
+                                <span>Xếp loại</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="status-indicator" id="rank-status"></div>
+                    <div class="loading" id="rank-loading">
+                        <div class="spinner"></div>
+                        <p>Đang xử lý...</p>
+                    </div>
+                    <div class="error" id="rank-error"></div>
+                    <div class="rank-result" id="rank-result">
+                        <div class="result-card" id="result-card">
+                            <div class="result-rank" id="result-rank">—</div>
+                            <div class="result-score" id="result-score">Điểm: —</div>
+                            <div class="result-message" id="result-message">Nhập điểm và nhấn Xếp loại</div>
+                        </div>
+                    </div>
+                    <div class="json-toggle">
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" id="toggle-json">
+                            <span class="checkmark"></span>
+                            Hiển thị JSON gốc
+                        </label>
+                    </div>
+                    <pre class="json-output hidden" id="rank-json"></pre>
+                </div>
+            </div>
+        </section>
+
+        <section class="section info-section">
+            <div class="container">
+                <h2>Thông Tin API</h2>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3>GET /api/students</h3>
+                        <p>Trả về danh sách 3 sinh viên mẫu với thông tin: ID, Tên, Lớp, Điểm.</p>
+                        <div class="example-response">
+                            <strong>Response:</strong>
+                            <pre>{ "ok": 1, "msg": "Thành công", "students": [...] }</pre>
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <h3>GET /api/rank?score=X</h3>
+                        <p>Xếp loại điểm theo thang điểm 10:</p>
+                        <ul>
+                            <li><strong>≥ 8.5:</strong> Giỏi</li>
+                            <li><strong>≥ 7.0:</strong> Khá</li>
+                            <li><strong>≥ 5.0:</strong> Trung bình</li>
+                            <li><strong>< 5.0:</strong> Yếu</li>
+                        </ul>
+                        <p class="validation-note">Validation: thiếu score, không phải số, < 0, > 10</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Bài Tập 2 - Node-RED API + Nginx Reverse Proxy</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

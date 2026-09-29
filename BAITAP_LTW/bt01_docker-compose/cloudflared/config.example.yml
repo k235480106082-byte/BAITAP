@@ -1,0 +1,34 @@
+tunnel: TUNNEL_ID_HERE
+credentials-file: /etc/cloudflared/TUNNEL_ID_HERE.json
+
+ingress:
+  - hostname: YOUR_DOMAIN_HERE
+    service: http://nginx:80
+    originRequest:
+      noTLSVerify: true
+      connectTimeout: 30s
+      tlsTimeout: 10s
+  - hostname: student.YOUR_DOMAIN_HERE
+    service: http://nginx:80
+    originRequest:
+      noTLSVerify: true
+  - hostname: technology.YOUR_DOMAIN_HERE
+    service: http://nginx:80
+    originRequest:
+      noTLSVerify: true
+  - hostname: nodered.YOUR_DOMAIN_HERE
+    service: http://nodered:1880
+    originRequest:
+      noTLSVerify: true
+  - hostname: phpmyadmin.YOUR_DOMAIN_HERE
+    service: http://phpmyadmin:80
+    originRequest:
+      noTLSVerify: true
+  - service: http_status:404
+
+warp-routing:
+  enabled: false
+
+metrics: 0.0.0.0:2000
+loglevel: info
+retries: 3

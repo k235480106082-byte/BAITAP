@@ -1,0 +1,33 @@
+Bài tập về nhà:
+
+deadline của cả 2 môn: 23h59 ngày 28/9/2026
+hình thức: làm trên máy cá nhân, đẩy lên repo github (truy cập public)
+đều dặn push code lên github (đã có file hướng dẫn dùng git qua cmd)
+
+Môn An toàn và bảo mật thông tin.
+1. tìm hiểu thuật toán mã hoá hiện đại DES, AES
+   mô tả đc thuật toán, quy trình mã hoá/giải mã
+   cài đặt AES trên 1 ngôn ngữ lập trình nào đó
+2. tìm hiểu về thuật toán mã hoá bất đối xứng RSA
+   nguyên lý sinh cặp khoá bí mật, công khai
+3. trình bày các mô hình hình áp dụng thuật toán RSA
+   xác thực người gửi, xác thực người nhận, cả 2
+   so sánh thời gian mã hoá/giải mã của RSA với AES.
+   đưa ra các dùng kết hợp sức mạnh của RSA và AES.
+---------------
+Bài tập về nhà môn Lập trình web:
+bài tập 1:
+1. giả lập linux os: hyperV, virtualBox, vmware, wsl
+2. cài đặt docker compose trên os đó
+3. cài trên docker compose : các dịch vụ: nginx, nodered, mariadb, phpmyadmin, cloudflared (cần domain xịn)
+4. cấu hình nginx có thể chạy 2 website  với 2 domain khác nhau.
+
+bài tập 2:
+1. sử dụng nodered: dùng node http_in + http_response => tạo api đơn giản
+2. cấu hình nginx để web dùng js gọi đc API trên nodered, thuật toán cho api (tự nghĩ)
+   ví dụ api trả về json:
+   https://tnut.cuong.id.vn/api/tacke
+   trả về json dạng: 
+   {"ok":1,"msg":"thành công","dssv":[{"name":"Cốp","money":123},{"name":"David","money":456}]}
+3. code js vào trang html để gọi đc api trên
+

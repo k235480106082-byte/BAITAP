@@ -1,0 +1,25 @@
+# Secrets — KHÔNG bao giờ commit file này
+.env
+.env.local
+.env.*.local
+secrets.local.md
+*-secrets.md
+secrets/
+.secrets/
+
+# SSH keys & certs
+*.pem
+*.key
+*.pfx
+*.p12
+*.crt
+.ssh/
+
+# Python / OS junk
+__pycache__/
+*.pyc
+.venv/
+venv/
+.DS_Store
+Thumbs.db
+context.md

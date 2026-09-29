@@ -1,0 +1,36 @@
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: web-bt2-nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./web:/var/www/web:ro
+    networks:
+      - web-bt2-network
+    restart: unless-stopped
+    depends_on:
+      - nodered
+
+  nodered:
+    image: nodered/node-red:latest
+    container_name: web-bt2-nodered
+    ports:
+      - "1881:1880"
+    volumes:
+      - nodered_data:/data
+    networks:
+      - web-bt2-network
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
+
+networks:
+  web-bt2-network:
+    driver: bridge
+    name: web-bt2-network
+
+volumes:
+  nodered_data:
+    name: web-bt2-nodered-data

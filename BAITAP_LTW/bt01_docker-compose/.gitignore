@@ -1,0 +1,38 @@
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Database data
+mariadb_data/
+nodered_data/
+
+# Docker volumes
+*.sql
+*.db
+
+# Logs
+*.log
+logs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+tmp/
+
+# Node modules (if any)
+node_modules/
+
+# Cloudflare secrets
+cloudflared/cert.pem
+cloudflared/config.yml

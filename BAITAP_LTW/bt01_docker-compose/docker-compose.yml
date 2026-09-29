@@ -1,0 +1,95 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: web-bt1-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./website1:/var/www/website1:ro
+      - ./website2:/var/www/website2:ro
+    networks:
+      - web-bt1-network
+    restart: unless-stopped
+    depends_on:
+      - nodered
+      - phpmyadmin
+
+  nodered:
+    image: nodered/node-red:latest
+    container_name: web-bt1-nodered
+    ports:
+      - "1880:1880"
+    volumes:
+      - nodered_data:/data
+    networks:
+      - web-bt1-network
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
+
+  mariadb:
+    image: mariadb:11
+    container_name: web-bt1-mariadb
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - web-bt1-network
+    restart: unless-stopped
+    environment:
+      - MARIADB_DATABASE=web_lab
+      - MARIADB_USER=webuser
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - TZ=Asia/Ho_Chi_Minh
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: web-bt1-phpmyadmin
+    networks:
+      - web-bt1-network
+    restart: unless-stopped
+    environment:
+      - PMA_HOST=mariadb
+      - PMA_PORT=3306
+      - PMA_USER=webuser
+      - PMA_PASSWORD=${MARIADB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - UPLOAD_LIMIT=100M
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: web-bt1-cloudflared
+    command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN}
+    networks:
+      - web-bt1-network
+    restart: unless-stopped
+    profiles:
+      - tunnel
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
+
+  cloudflared-web2:
+    image: cloudflare/cloudflared:latest
+    container_name: web-bt1-cloudflared-web2
+    command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN_WEB2}
+    networks:
+      - web-bt1-network
+    restart: unless-stopped
+    profiles:
+      - tunnel
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
+
+networks:
+  web-bt1-network:
+    driver: bridge
+    name: web-bt1-network
+
+volumes:
+  mariadb_data:
+    name: web-bt1-mariadb-data
+  nodered_data:
+    name: web-bt1-nodered-data
