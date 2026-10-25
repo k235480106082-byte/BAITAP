@@ -1,0 +1,40 @@
+bài tập môn AN toàn và bảo mật thông tin.
+
+bài 1: Mã hoá AES : Mã hoá đối xứng (mã hoá, giải mã cùng dùng 1 khoá)
+- tạo app (not web) : console, form
+  1. sinh khoá AES
+  2. lưu khoá ra file
+  3. import khoá từ file
+  4. mã hoá 1 đoạn văn bản -> kq mã hoá ra màn hình
+  5. mã hoá 1 file -> lưu vào 1 file.
+
+  y/c: thử nghiệm với file có kích thước lớn (hàng GB)
+       tính thời gian mã hoá, thời gian giải mã
+       compare theo bytes: file nguồn và file giải mã
+   => Kết luận dựa theo số liệu thu được
+--------------
+bài tập 2: mã hoá RSA : mã hoá bất đối xứng (mã hoá 1 chìa, giải mã bằng chìa còn lại)
+  tạo app: (.NET)
+ 1. sinh cặp khoá
+ 2. xuất cặp khoá ra file (pem)
+ 3. view pem: cùng các ý nghĩa các byte trong format pem
+ 4. nhập 1 file pem : public key được n và e
+    nhập 1 file pem : priavte key được n và e, d, ...
+5. mã hoá dữ liệu sử dụng key vừa import:
+    dữ liệu là 1 mảng byte ko quá 190 byte
+   (khoá AES 256 bit <=> 32 byte (base64))
+   kq mã hoá đc mảng byte (lưu ở dạng base64) => lưu file
+6. giải mã: đầu vào là pem, file chứa data đã mã hoá (base64)
+   so sánh kq giải mã với nguồn trước khi mã hoá.
+7. viết đoạn code đánh giá tốc độ mã hoá, giải mã
+   xem dùng khoá nào (pulic key: n, e bé), private key(n, d to đùng)
+   thì tốc độ ra sao?
+8. tạo giao diện sinh chuỗi băm SHA256 bít
+   khi thay đổi đầu vào => băm mới: đánh giá sự thay đổi của kq băm  khi dữ liệu đầu vào thay đổi (rất ít)
+9. CHỮ KÝ SỐ: thực ra là dùng RSA với khoá bí mật cho kq băm của dữ liệu => được gọi là chữ ký số của dữ liệu đó.
+=> dữ liệu khác nhau : có chữ ký số khác nhau (của cùng người ký)
+MONG MUỐN: 
+  + cùng 1 dữ liệu, 
+  + Cùng 1 người ký (cùng private key) 
+  =>thì chữ ký số cũng khác nhau với các lần ký khác nhau
+HÃY ĐỀ XUẤT PHƯƠNG PHÁP ĐỂ ĐẠT ĐƯỢC ĐIỀU NÀY.
