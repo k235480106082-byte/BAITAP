@@ -7,8 +7,7 @@
 | **Giảng viên hướng dẫn** | Đỗ Duy Cốp |
 | **Sinh viên thực hiện** | Nguyễn Văn Mạnh |
 | **MSSV** | K235480106082 |
-| **Deadline** | 23h59 ngày 28/9/2026 |
-| **Hình thức** | Push lên GitHub (public) |
+
 
 ---
 
